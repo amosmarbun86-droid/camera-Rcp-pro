@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Camera RCP Pro</title>
 
 <link rel="stylesheet" href="style.css">
@@ -19,46 +20,43 @@
   <video id="video" autoplay playsinline></video>
   <canvas id="canvas"></canvas>
 
-  <!-- GRID -->
-  <div class="grid"></div>
+  <div class="overlay">
 
-  <!-- TOP -->
-  <div class="top-bar">
-    <button onclick="toggleNight()">🌙</button>
-    <button onclick="switchCamera()">🔄</button>
-  </div>
+    <!-- TOP -->
+    <div class="top-bar">
+      <span>⚡</span>
+      <span onclick="toggleNight()">🌙</span>
+      <span onclick="switchCamera()">🔄</span>
+    </div>
 
-  <!-- MAP -->
-  <div id="map"></div>
+    <!-- INFO -->
+    <div class="info">
+      <p id="time"></p>
+      <p id="address"></p>
+    </div>
 
-  <!-- INFO -->
-  <div class="info">
-    <p id="time"></p>
-    <p id="address"></p>
-    <p id="coords"></p>
-  </div>
+    <!-- MAP -->
+    <div id="map"></div>
 
-  <!-- FILTER -->
-  <div class="filters">
-    <button onclick="setFilter('normal')">Normal</button>
-    <button onclick="setFilter('vintage')">Vintage</button>
-    <button onclick="setFilter('cool')">Cool</button>
-    <button onclick="setFilter('bw')">B/W</button>
-  </div>
+    <!-- FILTER -->
+    <div class="filters">
+      <button onclick="setFilter('normal')">Normal</button>
+      <button onclick="setFilter('vintage')">Vintage</button>
+      <button onclick="setFilter('cool')">Cool</button>
+      <button onclick="setFilter('bw')">B/W</button>
+    </div>
 
-  <!-- ZOOM -->
-  <input type="range" id="zoom" min="1" max="3" step="0.1" value="1">
+    <!-- BOTTOM -->
+    <div class="bottom-bar">
+      <button class="small" onclick="switchCamera()">🔄</button>
+      <button class="capture" onclick="takePhoto()"></button>
+      <button class="record" onclick="toggleRecord()"></button>
+    </div>
 
-  <!-- BOTTOM -->
-  <div class="bottom-bar">
-    <button onclick="switchCamera()">🔄</button>
-    <button class="capture" onclick="takePhoto()">📸</button>
-    <button onclick="toggleRecord()" id="rec">⏺️</button>
   </div>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
