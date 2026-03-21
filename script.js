@@ -3,29 +3,41 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 let facingMode = "environment";
+let currentFilter = "none";
 
-// START CAMERA
+// CAMERA
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode }
+    video: { facingMode },
+    audio: true
   });
   video.srcObject = stream;
 }
 startCamera();
 
-// SWITCH CAMERA
+// SWITCH
 function switchCamera() {
   facingMode = facingMode === "user" ? "environment" : "user";
   startCamera();
 }
 
-// NIGHT MODE
+// NIGHT
 function toggleNight() {
-  if (video.style.filter === "brightness(0.5)") {
-    video.style.filter = "none";
-  } else {
-    video.style.filter = "brightness(0.5)";
-  }
+  video.style.filter =
+    video.style.filter === "brightness(0.5)" ? "none" : "brightness(0.5)";
+}
+
+// FILTER
+function setFilter(type) {
+  const filters = {
+    normal: "none",
+    vintage: "sepia(0.7)",
+    cool: "contrast(1.2) saturate(1.5)",
+    bw: "grayscale(1)"
+  };
+
+  currentFilter = filters[type];
+  video.style.filter = currentFilter;
 }
 
 // TIME
@@ -34,7 +46,7 @@ setInterval(() => {
     new Date().toLocaleString();
 }, 1000);
 
-// GPS + MAP + ALAMAT (LEAFLET)
+// MAP + GPS
 navigator.geolocation.getCurrentPosition(async pos => {
   const lat = pos.coords.latitude;
   const lng = pos.coords.longitude;
@@ -42,38 +54,39 @@ navigator.geolocation.getCurrentPosition(async pos => {
   document.getElementById("coords").innerText =
     `Lat: ${lat}, Lng: ${lng}`;
 
-  // MAP
   const map = L.map('map').setView([lat, lng], 15);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap'
-  }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    .addTo(map);
 
   L.marker([lat, lng]).addTo(map);
 
-  // AMBIL ALAMAT
   const res = await fetch(
     `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
   );
   const data = await res.json();
 
   document.getElementById("address").innerText =
-    data.display_name || "Alamat tidak ditemukan";
+    data.display_name;
 });
 
-// FOTO + WATERMARK
+// ZOOM
+document.getElementById("zoom").addEventListener("input", e => {
+  video.style.transform = `scale(${e.target.value})`;
+});
+
+// FOTO
 function takePhoto() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
+  ctx.filter = currentFilter;
   ctx.drawImage(video, 0, 0);
+  ctx.filter = "none";
 
-  // TEXT
   ctx.fillStyle = "yellow";
-  ctx.font = "16px Arial";
   ctx.fillText(new Date().toLocaleString(), 10, canvas.height - 20);
 
-  // LOGO
   const img = new Image();
   img.src = "logo.png";
 
@@ -81,8 +94,47 @@ function takePhoto() {
     ctx.drawImage(img, canvas.width - 80, canvas.height - 80, 70, 70);
 
     const link = document.createElement("a");
-    link.download = "photo.png";
+    link.download = "CameraRCP_" + Date.now() + ".png";
     link.href = canvas.toDataURL();
     link.click();
   };
+
+  // FLASH
+  const flash = document.createElement("div");
+  flash.className = "flash";
+  document.querySelector(".app").appendChild(flash);
+  setTimeout(() => flash.remove(), 300);
+}
+
+// VIDEO
+let recorder;
+let chunks = [];
+let recording = false;
+
+function toggleRecord() {
+  if (!recording) {
+    recorder = new MediaRecorder(video.srcObject);
+
+    recorder.ondataavailable = e => {
+      if (e.data.size > 0) chunks.push(e.data);
+    };
+
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: "video/webm" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "VideoRCP_" + Date.now() + ".webm";
+      a.click();
+
+      chunks = [];
+    };
+
+    recorder.start();
+    recording = true;
+  } else {
+    recorder.stop();
+    recording = false;
+  }
 }
