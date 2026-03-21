@@ -1,30 +1,16 @@
 # 📸 Camera RCP Pro
 
-Advanced Web Camera Application powered by **RCP86**.
+Advanced Mobile Web Camera powered by RCP86.
 
-## 🚀 Features
+## Features
 - Photo Capture
-- Camera Switch (Front / Back)
+- GPS Address Watermark
+- Realtime Map
+- Camera Switch
 - Night Mode
-- Live Filters
-- GPS Realtime Location
-- Address Detection
-- Mini Map (OpenStreetMap)
-- Pinch Zoom Gesture
+- Filters
+- Pinch Zoom
 - Mobile Friendly
 
-## 🧠 Technology
-- HTML5 Camera API
-- JavaScript
-- Geolocation API
-- Leaflet Map
-- Canvas API
-
-## 📱 Usage
-Open `index.html` directly or deploy using GitHub Pages.
-
-## 🌐 Live Concept
-Web camera app designed for mobile-first experience and PWA conversion.
-
-## 👨‍💻 Author
-Powered by **RCP86**
+## Author
+Powered by RCP86
