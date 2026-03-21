@@ -20,6 +20,9 @@
   <video id="video" autoplay playsinline></video>
   <canvas id="canvas"></canvas>
 
+  <!-- GRID -->
+  <div class="grid"></div>
+
   <div class="overlay">
 
     <!-- TOP -->
@@ -35,10 +38,10 @@
       <p id="address"></p>
     </div>
 
-    <!-- MAP -->
+    <!-- MAP MINI -->
     <div id="map"></div>
 
-    <!-- FILTER -->
+    <!-- FILTERS -->
     <div class="filters">
       <button onclick="setFilter('normal')">Normal</button>
       <button onclick="setFilter('vintage')">Vintage</button>
@@ -46,7 +49,10 @@
       <button onclick="setFilter('bw')">B/W</button>
     </div>
 
-    <!-- BOTTOM -->
+    <!-- ZOOM -->
+    <input type="range" id="zoom" min="1" max="3" step="0.1" value="1">
+
+    <!-- BOTTOM BAR -->
     <div class="bottom-bar">
       <button class="small" onclick="switchCamera()">🔄</button>
       <button class="capture" onclick="takePhoto()"></button>
