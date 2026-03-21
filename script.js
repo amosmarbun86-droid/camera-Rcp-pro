@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 
 let facingMode = "environment";
 let currentFilter = "none";
+let scale = 1;
 
 // CAMERA
 async function startCamera() {
@@ -51,9 +52,6 @@ navigator.geolocation.getCurrentPosition(async pos => {
   const lat = pos.coords.latitude;
   const lng = pos.coords.longitude;
 
-  document.getElementById("coords").innerText =
-    `Lat: ${lat}, Lng: ${lng}`;
-
   const map = L.map('map').setView([lat, lng], 15);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
@@ -70,10 +68,30 @@ navigator.geolocation.getCurrentPosition(async pos => {
     data.display_name;
 });
 
-// ZOOM
-document.getElementById("zoom").addEventListener("input", e => {
-  video.style.transform = `scale(${e.target.value})`;
+// PINCH ZOOM
+let startDist = 0;
+
+video.addEventListener("touchstart", e => {
+  if (e.touches.length === 2) {
+    startDist = getDistance(e.touches);
+  }
 });
+
+video.addEventListener("touchmove", e => {
+  if (e.touches.length === 2) {
+    const newDist = getDistance(e.touches);
+    let zoom = newDist / startDist;
+
+    scale = Math.min(Math.max(1, zoom), 3);
+    video.style.transform = `scale(${scale})`;
+  }
+});
+
+function getDistance(touches) {
+  let dx = touches[0].clientX - touches[1].clientX;
+  let dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
 
 // FOTO
 function takePhoto() {
@@ -83,9 +101,6 @@ function takePhoto() {
   ctx.filter = currentFilter;
   ctx.drawImage(video, 0, 0);
   ctx.filter = "none";
-
-  ctx.fillStyle = "yellow";
-  ctx.fillText(new Date().toLocaleString(), 10, canvas.height - 20);
 
   const img = new Image();
   img.src = "logo.png";
@@ -104,6 +119,8 @@ function takePhoto() {
   flash.className = "flash";
   document.querySelector(".app").appendChild(flash);
   setTimeout(() => flash.remove(), 300);
+
+  navigator.vibrate?.(50);
 }
 
 // VIDEO
