@@ -6,9 +6,7 @@ text-align:center;
 margin:0;
 }
 
-h2{
-margin-top:10px;
-}
+h2{margin-top:10px;}
 
 #openCam{
 padding:12px;
@@ -18,7 +16,6 @@ margin:10px;
 
 .camera-box{
 position:relative;
-width:100%;
 max-width:500px;
 margin:auto;
 }
@@ -38,14 +35,11 @@ left:0;
 width:100%;
 }
 
-.controls{
-margin-top:10px;
-}
+.controls{margin-top:10px;}
 
 button{
 margin:5px;
 padding:10px;
-font-size:14px;
 border:none;
 border-radius:6px;
 }
