@@ -1,20 +1,53 @@
+/* RESET & FULL SCREEN */
 html, body {
   margin:0;
+  padding:0;
+  width:100%;
   height:100%;
   overflow:hidden;
   background:black;
+  font-family: Arial, sans-serif;
 }
 
 .app {
-  width:100vw;
-  height:100vh;
-  position:relative;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
+/* VIDEO PROPORSIONAL */
 video {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 160px); /* space untuk tombol bawah */
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  transform-origin: center center;
+}
+
+/* CANVAS */
+canvas {
+  position: absolute;
+  top:0;
+  left:0;
   width:100%;
-  height:100%;
-  object-fit:cover;
+  height:calc(100% - 160px);
+}
+
+/* GRID */
+.grid {
+  position: absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:calc(100% - 160px);
+  background-image:
+    linear-gradient(white 1px, transparent 1px),
+    linear-gradient(90deg, white 1px, transparent 1px);
+  background-size: 33% 33%;
+  opacity: 0.3;
+  pointer-events: none;
 }
 
 /* OVERLAY */
@@ -25,15 +58,18 @@ video {
   display:flex;
   flex-direction:column;
   justify-content:space-between;
+  pointer-events: none;
 }
 
-/* TOP */
+/* TOP BAR */
 .top-bar {
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:20px;
   font-size:20px;
   color:white;
+  pointer-events:auto;
 }
 
 /* INFO */
@@ -42,58 +78,77 @@ video {
   top:80px;
   left:10px;
   font-size:12px;
+  color:white;
+  pointer-events:none;
 }
 
-/* MAP */
+/* MAP MINI */
 #map {
   position:absolute;
-  bottom:180px;
+  bottom:200px;
   left:10px;
   width:100px;
   height:100px;
   border-radius:10px;
+  z-index:10;
+  pointer-events:auto;
 }
 
-/* FILTER */
+/* FILTERS */
 .filters {
   position:absolute;
-  bottom:140px;
+  bottom:160px;
   width:100%;
   display:flex;
   overflow-x:auto;
   gap:10px;
   padding:10px;
+  pointer-events:auto;
 }
 
 .filters button {
   padding:6px 12px;
   border-radius:20px;
-  background:rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.5);
   color:white;
   border:none;
+  font-size:12px;
+  cursor:pointer;
+  transition: all 0.2s ease;
 }
 
-/* BOTTOM */
+.filters button:active {
+  transform:scale(0.9);
+}
+
+/* ZOOM SLIDER */
+#zoom {
+  position:absolute;
+  bottom:120px;
+  left:10%;
+  width:80%;
+  pointer-events:auto;
+}
+
+/* BOTTOM BAR */
 .bottom-bar {
   display:flex;
   justify-content:center;
   align-items:center;
   gap:40px;
-  padding-bottom:30px;
-}
-
-/* BUTTON */
-button {
-  transition:0.2s;
+  padding-bottom:20px;
+  pointer-events:auto;
 }
 
 /* CAPTURE */
 .capture {
-  width:70px;
-  height:70px;
+  width:60px;
+  height:60px;
   border-radius:50%;
-  border:5px solid white;
+  border:4px solid white;
   background:transparent;
+  cursor:pointer;
+  transition: transform 0.2s ease;
 }
 
 .capture:active {
@@ -106,14 +161,31 @@ button {
   height:40px;
   border-radius:50%;
   background:red;
+  cursor:pointer;
+  transition: transform 0.2s ease;
 }
 
-/* SMALL */
+.record:active {
+  transform:scale(0.9);
+}
+
+/* SMALL BUTTON */
 .small {
   font-size:20px;
+  background: rgba(0,0,0,0.5);
+  color:white;
+  border:none;
+  border-radius:50%;
+  padding:8px;
+  cursor:pointer;
+  transition: transform 0.2s ease;
 }
 
-/* FLASH */
+.small:active {
+  transform:scale(0.9);
+}
+
+/* FLASH ANIMATION */
 .flash {
   position:absolute;
   width:100%;
@@ -123,6 +195,7 @@ button {
   left:0;
   opacity:0.8;
   animation:flash 0.3s;
+  pointer-events:none;
 }
 
 @keyframes flash {
