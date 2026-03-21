@@ -1,68 +1,50 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Camera RCP Pro</title>
 
 <link rel="stylesheet" href="style.css">
 
-<!-- LEAFLET -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 
 <body>
 
-<div class="app">
+<h2>📸 Camera RCP Pro</h2>
 
-  <video id="video" autoplay playsinline></video>
-  <canvas id="canvas"></canvas>
+<button id="openCam" onclick="startCamera()">
+Buka Kamera
+</button>
 
-  <!-- GRID -->
-  <div class="grid"></div>
+<div class="camera-box">
 
-  <div class="overlay">
-
-    <!-- TOP -->
-    <div class="top-bar">
-      <span>⚡</span>
-      <span onclick="toggleNight()">🌙</span>
-      <span onclick="switchCamera()">🔄</span>
-    </div>
-
-    <!-- INFO -->
-    <div class="info">
-      <p id="time"></p>
-      <p id="address"></p>
-    </div>
-
-    <!-- MAP MINI -->
-    <div id="map"></div>
-
-    <!-- FILTERS -->
-    <div class="filters">
-      <button onclick="setFilter('normal')">Normal</button>
-      <button onclick="setFilter('vintage')">Vintage</button>
-      <button onclick="setFilter('cool')">Cool</button>
-      <button onclick="setFilter('bw')">B/W</button>
-    </div>
-
-    <!-- ZOOM -->
-    <input type="range" id="zoom" min="1" max="3" step="0.1" value="1">
-
-    <!-- BOTTOM BAR -->
-    <div class="bottom-bar">
-      <button class="small" onclick="switchCamera()">🔄</button>
-      <button class="capture" onclick="takePhoto()"></button>
-      <button class="record" onclick="toggleRecord()"></button>
-    </div>
-
-  </div>
+<video id="video" autoplay playsinline></video>
+<canvas id="canvas"></canvas>
 
 </div>
 
+<div class="controls">
+<button onclick="takePhoto()">📷 Foto</button>
+<button onclick="switchCamera()">🔄 Switch</button>
+<button onclick="toggleNight()">🌙 Night</button>
+
+<button onclick="setFilter('normal')">Normal</button>
+<button onclick="setFilter('vintage')">Vintage</button>
+<button onclick="setFilter('cool')">Cool</button>
+<button onclick="setFilter('bw')">B&W</button>
+</div>
+
+<p id="time"></p>
+<p id="address">Detecting location...</p>
+
+<div id="map"></div>
+
 <script src="script.js"></script>
+
 </body>
 </html>
