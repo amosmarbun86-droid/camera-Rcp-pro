@@ -6,7 +6,9 @@ let facingMode = "environment";
 let currentFilter = "none";
 let scale = 1;
 
+// --------------------
 // CAMERA
+// --------------------
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
     video: { facingMode },
@@ -16,19 +18,25 @@ async function startCamera() {
 }
 startCamera();
 
+// --------------------
 // SWITCH CAMERA
+// --------------------
 function switchCamera() {
   facingMode = facingMode === "user" ? "environment" : "user";
   startCamera();
 }
 
+// --------------------
 // NIGHT MODE
+// --------------------
 function toggleNight() {
   video.style.filter =
     video.style.filter === "brightness(0.5)" ? "none" : "brightness(0.5)";
 }
 
+// --------------------
 // FILTER
+// --------------------
 function setFilter(type) {
   const filters = {
     normal: "none",
@@ -40,13 +48,17 @@ function setFilter(type) {
   video.style.filter = currentFilter;
 }
 
+// --------------------
 // TIME
+// --------------------
 setInterval(() => {
   document.getElementById("time").innerText =
     new Date().toLocaleString();
 }, 1000);
 
+// --------------------
 // MAP + GPS
+// --------------------
 navigator.geolocation.getCurrentPosition(async pos => {
   const lat = pos.coords.latitude;
   const lng = pos.coords.longitude;
@@ -62,7 +74,9 @@ navigator.geolocation.getCurrentPosition(async pos => {
   document.getElementById("address").innerText = data.display_name;
 });
 
-// PINCH ZOOM
+// --------------------
+// PINCH ZOOM (GESTURE)
+// --------------------
 let startDist = 0;
 video.addEventListener("touchstart", e => {
   if (e.touches.length === 2) startDist = getDistance(e.touches);
@@ -80,28 +94,44 @@ function getDistance(touches) {
   return Math.sqrt(dx*dx + dy*dy);
 }
 
+// --------------------
 // TAKE PHOTO
+// --------------------
 function takePhoto() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
+  // Bersihkan canvas sebelum gambar baru
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Terapkan filter
   ctx.filter = currentFilter;
+
+  // Gambar video
   ctx.drawImage(video, 0, 0);
+
+  // Reset filter
   ctx.filter = "none";
 
+  // Download foto
   const link = document.createElement("a");
   link.download = "CameraRCP_" + Date.now() + ".png";
   link.href = canvas.toDataURL();
   link.click();
 
+  // Flash animasi
   const flash = document.createElement("div");
   flash.className = "flash";
   document.querySelector(".app").appendChild(flash);
   setTimeout(() => flash.remove(), 300);
+
+  // Getar seperti kamera asli
   navigator.vibrate?.(50);
 }
 
+// --------------------
 // VIDEO RECORDING
+// --------------------
 let recorder;
 let chunks = [];
 let recording = false;
