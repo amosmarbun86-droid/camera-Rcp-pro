@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 
 let facingMode = "environment";
 
+// START CAMERA
 async function startCamera() {
   const stream = await navigator.mediaDevices.getUserMedia({
     video: { facingMode }
@@ -12,64 +13,76 @@ async function startCamera() {
 }
 startCamera();
 
+// SWITCH CAMERA
 function switchCamera() {
   facingMode = facingMode === "user" ? "environment" : "user";
   startCamera();
 }
 
+// NIGHT MODE
 function toggleNight() {
-  video.style.filter = "brightness(0.5)";
+  if (video.style.filter === "brightness(0.5)") {
+    video.style.filter = "none";
+  } else {
+    video.style.filter = "brightness(0.5)";
+  }
 }
 
+// TIME
 setInterval(() => {
   document.getElementById("time").innerText =
     new Date().toLocaleString();
 }, 1000);
 
+// GPS + MAP + ALAMAT (LEAFLET)
 navigator.geolocation.getCurrentPosition(async pos => {
   const lat = pos.coords.latitude;
   const lng = pos.coords.longitude;
 
   document.getElementById("coords").innerText =
-    `Lat:${lat} Lng:${lng}`;
+    `Lat: ${lat}, Lng: ${lng}`;
 
-  const map = new google.maps.Map(
-    document.getElementById("map"),
-    { center:{lat,lng}, zoom:15 }
-  );
+  // MAP
+  const map = L.map('map').setView([lat, lng], 15);
 
-  new google.maps.Marker({
-    position:{lat,lng},
-    map
-  });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+  }).addTo(map);
 
+  L.marker([lat, lng]).addTo(map);
+
+  // AMBIL ALAMAT
   const res = await fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=API_KEY`
+    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
   );
   const data = await res.json();
 
   document.getElementById("address").innerText =
-    data.results[0].formatted_address;
+    data.display_name || "Alamat tidak ditemukan";
 });
 
+// FOTO + WATERMARK
 function takePhoto() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
 
-  ctx.drawImage(video,0,0);
+  ctx.drawImage(video, 0, 0);
 
-  ctx.fillStyle="yellow";
-  ctx.fillText(new Date().toLocaleString(),10,canvas.height-20);
+  // TEXT
+  ctx.fillStyle = "yellow";
+  ctx.font = "16px Arial";
+  ctx.fillText(new Date().toLocaleString(), 10, canvas.height - 20);
 
+  // LOGO
   const img = new Image();
   img.src = "logo.png";
 
-  img.onload = ()=>{
-    ctx.drawImage(img,canvas.width-80,canvas.height-80,70,70);
+  img.onload = () => {
+    ctx.drawImage(img, canvas.width - 80, canvas.height - 80, 70, 70);
 
     const link = document.createElement("a");
-    link.download="photo.png";
-    link.href=canvas.toDataURL();
+    link.download = "photo.png";
+    link.href = canvas.toDataURL();
     link.click();
-  }
+  };
 }
