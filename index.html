@@ -22,7 +22,7 @@
   <!-- GRID -->
   <div class="grid"></div>
 
-  <!-- TOP BAR -->
+  <!-- TOP -->
   <div class="top-bar">
     <button onclick="toggleNight()">🌙</button>
     <button onclick="switchCamera()">🔄</button>
@@ -38,9 +38,22 @@
     <p id="coords"></p>
   </div>
 
-  <!-- BUTTON -->
+  <!-- FILTER -->
+  <div class="filters">
+    <button onclick="setFilter('normal')">Normal</button>
+    <button onclick="setFilter('vintage')">Vintage</button>
+    <button onclick="setFilter('cool')">Cool</button>
+    <button onclick="setFilter('bw')">B/W</button>
+  </div>
+
+  <!-- ZOOM -->
+  <input type="range" id="zoom" min="1" max="3" step="0.1" value="1">
+
+  <!-- BOTTOM -->
   <div class="bottom-bar">
-    <button onclick="takePhoto()">📸</button>
+    <button onclick="switchCamera()">🔄</button>
+    <button class="capture" onclick="takePhoto()">📸</button>
+    <button onclick="toggleRecord()" id="rec">⏺️</button>
   </div>
 
 </div>
