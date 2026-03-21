@@ -6,7 +6,10 @@
 
 <link rel="stylesheet" href="style.css">
 
-<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY"></script>
+<!-- LEAFLET -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 </head>
 
 <body>
@@ -16,21 +19,26 @@
   <video id="video" autoplay playsinline></video>
   <canvas id="canvas"></canvas>
 
+  <!-- GRID -->
   <div class="grid"></div>
 
+  <!-- TOP BAR -->
   <div class="top-bar">
     <button onclick="toggleNight()">🌙</button>
     <button onclick="switchCamera()">🔄</button>
   </div>
 
+  <!-- MAP -->
   <div id="map"></div>
 
+  <!-- INFO -->
   <div class="info">
     <p id="time"></p>
     <p id="address"></p>
     <p id="coords"></p>
   </div>
 
+  <!-- BUTTON -->
   <div class="bottom-bar">
     <button onclick="takePhoto()">📸</button>
   </div>
