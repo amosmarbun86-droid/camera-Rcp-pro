@@ -1,6 +1,19 @@
-const video = document.getElementById("video");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+// ================= BRAND CONFIG =================
+const brandLogo = new Image();
+brandLogo.src = "logo.png";
+
+const brandName = "AMOS RCP86";
+
+let photoCounter = 1;
+let currentLat = "";
+let currentLng = "";
+
+const deviceName = navigator.userAgent;
+
+// ================= ELEMENT =================
+const video=document.getElementById("video");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
 
 let facingMode="environment";
 let stream=null;
@@ -30,7 +43,7 @@ video.style.display="block";
 document.getElementById("openCam").style.display="none";
 }
 
-// ================= SWITCH =================
+// ================= SWITCH CAMERA =================
 function switchCamera(){
 facingMode=facingMode==="user"?"environment":"user";
 startCamera();
@@ -60,7 +73,7 @@ currentFilter=filters[type];
 applyFilter();
 }
 
-// ================= PHOTO =================
+// ================= PHOTO PRO MAX =================
 function takePhoto(){
 
 canvas.style.display="block";
@@ -70,23 +83,63 @@ canvas.height=video.videoHeight;
 
 ctx.drawImage(video,0,0);
 
-// watermark
+const panelHeight=150;
+
+ctx.fillStyle="rgba(0,0,0,0.6)";
+ctx.fillRect(0,canvas.height-panelHeight,canvas.width,panelHeight);
+
 const address=document.getElementById("address").innerText;
 const time=document.getElementById("time").innerText;
 
-ctx.fillStyle="rgba(0,0,0,0.5)";
-ctx.fillRect(0,canvas.height-90,canvas.width,90);
+const photoID="IMG-"+String(photoCounter).padStart(4,"0");
 
-ctx.fillStyle="#fff";
-ctx.font="20px Arial";
+// BRAND
+ctx.fillStyle="#00ffd5";
+ctx.font="bold 24px Arial";
+ctx.textAlign="left";
+ctx.fillText(brandName,20,canvas.height-115);
 
-ctx.fillText(address,20,canvas.height-50);
-ctx.fillText(time,20,canvas.height-20);
+// INFO
+ctx.fillStyle="#ffffff";
+ctx.font="18px Arial";
 
+ctx.fillText(address,20,canvas.height-85);
+ctx.fillText(time,20,canvas.height-60);
+
+ctx.fillText(
+`GPS: ${currentLat}, ${currentLng}`,
+20,
+canvas.height-35
+);
+
+ctx.fillText(photoID,20,canvas.height-10);
+
+// DEVICE
+ctx.textAlign="right";
+ctx.fillText(
+deviceName.substring(0,35),
+canvas.width-20,
+canvas.height-10
+);
+
+// LOGO
+const logoSize=90;
+
+ctx.drawImage(
+brandLogo,
+canvas.width-logoSize-20,
+canvas.height-logoSize-20,
+logoSize,
+logoSize
+);
+
+// DOWNLOAD
 const link=document.createElement("a");
-link.download="RCP_photo.png";
+link.download=`${photoID}.png`;
 link.href=canvas.toDataURL("image/png");
 link.click();
+
+photoCounter++;
 
 setTimeout(()=>{
 ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -100,29 +153,28 @@ document.getElementById("time").innerText=
 new Date().toLocaleString();
 },1000);
 
-// ================= GPS REALTIME =================
+// ================= GPS =================
 navigator.geolocation.watchPosition(async pos=>{
 
-const lat=pos.coords.latitude;
-const lng=pos.coords.longitude;
+currentLat=pos.coords.latitude.toFixed(6);
+currentLng=pos.coords.longitude.toFixed(6);
 
 if(!map){
-map=L.map("map").setView([lat,lng],15);
+map=L.map("map").setView([currentLat,currentLng],15);
 
 L.tileLayer(
 "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 ).addTo(map);
 
-marker=L.marker([lat,lng]).addTo(map);
-
+marker=L.marker([currentLat,currentLng]).addTo(map);
 }else{
-marker.setLatLng([lat,lng]);
-map.setView([lat,lng]);
+marker.setLatLng([currentLat,currentLng]);
+map.setView([currentLat,currentLng]);
 }
 
 try{
 const res=await fetch(
-`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+`https://nominatim.openstreetmap.org/reverse?lat=${currentLat}&lon=${currentLng}&format=json`
 );
 const data=await res.json();
 document.getElementById("address").innerText=data.display_name;
