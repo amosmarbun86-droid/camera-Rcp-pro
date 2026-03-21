@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Camera RCP Pro</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://maps.googleapis.com/maps/api/js?key=API_KEY"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas"></canvas>
+
+  <div class="grid"></div>
+
+  <div class="top-bar">
+    <button onclick="toggleNight()">🌙</button>
+    <button onclick="switchCamera()">🔄</button>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="info">
+    <p id="time"></p>
+    <p id="address"></p>
+    <p id="coords"></p>
+  </div>
+
+  <div class="bottom-bar">
+    <button onclick="takePhoto()">📸</button>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
