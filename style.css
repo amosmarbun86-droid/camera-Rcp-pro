@@ -18,6 +18,9 @@ margin:10px;
 position:relative;
 max-width:500px;
 margin:auto;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 0 20px rgba(0,0,0,0.6);
 }
 
 video{
@@ -25,6 +28,7 @@ width:100%;
 border-radius:10px;
 display:none;
 transform-origin:center;
+transition:0.3s;
 }
 
 canvas{
@@ -42,10 +46,58 @@ margin:5px;
 padding:10px;
 border:none;
 border-radius:6px;
+background:#1f2937;
+color:white;
+transition:0.2s;
+}
+
+button:hover{
+background:#374151;
+transform:scale(1.05);
 }
 
 #map{
 height:200px;
 margin:10px;
 border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.5);
+}
+
+/* SIDEBAR */
+.sidebar{
+position:fixed;
+left:-270px;
+top:0;
+width:260px;
+height:100%;
+background:#0f172a;
+color:white;
+padding:15px;
+transition:0.3s;
+z-index:999;
+overflow-y:auto;
+}
+
+.sidebar.active{
+left:0;
+}
+
+.open-sidebar{
+position:fixed;
+top:10px;
+right:10px;
+background:#0f172a;
+color:white;
+border:none;
+padding:10px;
+border-radius:8px;
+}
+
+.menu{
+margin-bottom:20px;
+text-align:left;
+}
+
+.menu h4{
+color:#00ffd5;
 }
