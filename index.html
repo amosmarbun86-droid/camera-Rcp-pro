@@ -4,10 +4,8 @@
 <meta charset="UTF-8">
 <title>Camera RCP Pro</title>
 
-<!-- MOBILE VIEW -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- PWA CONFIG -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f172a">
 <link rel="apple-touch-icon" href="logo.png">
@@ -16,24 +14,54 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-<!-- STYLE -->
 <link rel="stylesheet" href="style.css">
 
-<!-- LEAFLET MAP -->
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
 </head>
 
 <body>
 
+<!-- ⚙️ SIDEBAR BUTTON -->
+<button class="open-sidebar" onclick="toggleSidebar()">⚙️</button>
+
+<!-- ⚙️ SIDEBAR -->
+<div id="sidebar" class="sidebar">
+<h3>⚙️ Pengaturan</h3>
+
+<div class="menu">
+<h4>Tampilan</h4>
+<select onchange="changeFont(this.value)">
+<option>Arial</option>
+<option>monospace</option>
+<option>cursive</option>
+</select>
+
+<input type="range" min="12" max="30"
+oninput="changeFontSize(this.value)">
+</div>
+
+<div class="menu">
+<h4>Watermark</h4>
+<input type="text" placeholder="Nama..."
+oninput="setWatermark(this.value)">
+
+<select onchange="setWatermarkPosition(this.value)">
+<option value="bottom">Bawah</option>
+<option value="top">Atas</option>
+</select>
+</div>
+
+<div class="menu">
+<h4>Lokasi</h4>
+<button onclick="toggleLocation()">ON / OFF</button>
+</div>
+</div>
+
 <h2>📸 Camera RCP Pro</h2>
 
-<button id="openCam" onclick="startCamera()">
-📷 Buka Kamera
-</button>
+<button id="openCam" onclick="startCamera()">📷 Buka Kamera</button>
 
 <div class="camera-box">
 <video id="video" autoplay playsinline></video>
@@ -58,34 +86,10 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script src="script.js"></script>
 
-<!-- ✅ SERVICE WORKER REGISTER -->
 <script>
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js")
-      .then(() => console.log("✅ Camera RCP Pro PWA Active"))
-      .catch(err => console.log("SW Error:", err));
-  });
+  navigator.serviceWorker.register("./sw.js");
 }
-</script>
-
-<!-- ✅ AUTO INSTALL APP -->
-<script>
-let deferredPrompt;
-
-window.addEventListener("beforeinstallprompt", (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-
-  setTimeout(() => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(() => {
-        deferredPrompt = null;
-      });
-    }
-  }, 2500);
-});
 </script>
 
 </body>
