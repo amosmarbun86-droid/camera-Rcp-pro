@@ -1,4 +1,4 @@
-const CACHE_NAME = "camera-rcp-pro-v1";
+const CACHE_NAME = "camera-rcp-pro-v2";
 
 const urlsToCache = [
   "./",
@@ -13,11 +13,21 @@ self.addEventListener("install", event => {
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(names =>
+      Promise.all(
+        names.map(n => n !== CACHE_NAME && caches.delete(n))
+      )
+    )
+  );
 });
 
 self.addEventListener("fetch", event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    caches.match(event.request).then(res => res || fetch(event.request))
   );
 });
