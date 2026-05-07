@@ -1,96 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Camera RCP Pro</title>
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0f172a">
-<link rel="apple-touch-icon" href="logo.png">
-
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-<link rel="stylesheet" href="style.css">
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Camera RCP Pro - Next Gen</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<!-- ⚙️ SIDEBAR BUTTON -->
-<button class="open-sidebar" onclick="toggleSidebar()">⚙️</button>
+    <div id="sidebar" class="sidebar">
+        <h3>⚙️ Pengaturan</h3>
+        <div class="menu">
+            <h4>Tampilan</h4>
+            <select onchange="changeFont(this.value)">
+                <option value="Inter">Inter (Modern)</option>
+                <option value="monospace">Monospace</option>
+                <option value="cursive">Cursive</option>
+            </select>
+            <input type="range" min="12" max="30" oninput="changeFontSize(this.value)">
+        </div>
+        <div class="menu">
+            <h4>Watermark</h4>
+            <input type="text" placeholder="Nama Kustom..." oninput="setWatermark(this.value)">
+        </div>
+        <div class="menu">
+            <h4>Fitur</h4>
+            <button class="btn-side" onclick="toggleLocation()">GPS: ON/OFF</button>
+            <button class="btn-side" onclick="toggleSidebar()">Tutup</button>
+        </div>
+    </div>
 
-<!-- ⚙️ SIDEBAR -->
-<div id="sidebar" class="sidebar">
-<h3>⚙️ Pengaturan</h3>
+    <button class="open-sidebar" onclick="toggleSidebar()">⚙️</button>
 
-<div class="menu">
-<h4>Tampilan</h4>
-<select onchange="changeFont(this.value)">
-<option>Arial</option>
-<option>monospace</option>
-<option>cursive</option>
-</select>
+    <div class="app-container">
+        <header>
+            <h2>RCP<span>PRO</span></h2>
+            <p id="time"></p>
+        </header>
 
-<input type="range" min="12" max="30"
-oninput="changeFontSize(this.value)">
-</div>
+        <div class="camera-wrapper">
+            <div class="camera-box" id="camBox">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas"></canvas>
+                <div class="shutter-flash"></div>
+                <div class="grid-overlay"></div>
+            </div>
 
-<div class="menu">
-<h4>Watermark</h4>
-<input type="text" placeholder="Nama..."
-oninput="setWatermark(this.value)">
+            <div class="info-overlay">
+                <p id="address">Mendeteksi lokasi...</p>
+            </div>
+        </div>
 
-<select onchange="setWatermarkPosition(this.value)">
-<option value="bottom">Bawah</option>
-<option value="top">Atas</option>
-</select>
-</div>
+        <div class="main-controls">
+            <div class="filter-bar">
+                <button onclick="setFilter('normal')">Normal</button>
+                <button onclick="setFilter('vintage')">Vintage</button>
+                <button onclick="setFilter('cool')">Cool</button>
+                <button onclick="setFilter('bw')">B&W</button>
+            </div>
 
-<div class="menu">
-<h4>Lokasi</h4>
-<button onclick="toggleLocation()">ON / OFF</button>
-</div>
-</div>
+            <div class="action-bar">
+                <button class="btn-icon" onclick="switchCamera()">🔄</button>
+                <button class="btn-shutter" onclick="takePhoto()">
+                    <div class="inner-shutter"></div>
+                </button>
+                <button class="btn-icon" onclick="toggleNight()">🌙</button>
+            </div>
+        </div>
 
-<h2>📸 Camera RCP Pro</h2>
+        <div id="map"></div>
+    </div>
 
-<button id="openCam" onclick="startCamera()">📷 Buka Kamera</button>
+    <button id="openCam" onclick="startCamera()">📷 AKTIFKAN KAMERA</button>
 
-<div class="camera-box">
-<video id="video" autoplay playsinline></video>
-<canvas id="canvas"></canvas>
-</div>
-
-<div class="controls">
-<button onclick="takePhoto()">📸 Foto</button>
-<button onclick="switchCamera()">🔄 Switch</button>
-<button onclick="toggleNight()">🌙 Night</button>
-
-<button onclick="setFilter('normal')">Normal</button>
-<button onclick="setFilter('vintage')">Vintage</button>
-<button onclick="setFilter('cool')">Cool</button>
-<button onclick="setFilter('bw')">B&W</button>
-</div>
-
-<p id="time"></p>
-<p id="address">Detecting location...</p>
-
-<div id="map"></div>
-
-<script src="script.js"></script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
-}
-</script>
-
+    <script src="script.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("./sw.js");
+        }
+    </script>
 </body>
 </html>
