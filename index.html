@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Camera RCP Pro - Next Gen</title>
+    <title>Camera RCP Pro - Ultimate Edition</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="style.css">
@@ -22,16 +22,17 @@
                 <option value="monospace">Monospace</option>
                 <option value="cursive">Cursive</option>
             </select>
-            <input type="range" min="12" max="30" oninput="changeFontSize(this.value)">
+            <input type="range" min="12" max="30" oninput="changeFontSize(this.value)" value="18">
+        </div>
+        <div class="menu">
+            <h4>Fitur Pro</h4>
+            <button class="btn-side" onclick="toggleGrid()">Grid: ON/OFF</button>
+            <button class="btn-side" onclick="toggleLocation()">GPS: ON/OFF</button>
         </div>
         <div class="menu">
             <h4>Watermark</h4>
             <input type="text" placeholder="Nama Kustom..." oninput="setWatermark(this.value)">
-        </div>
-        <div class="menu">
-            <h4>Fitur</h4>
-            <button class="btn-side" onclick="toggleLocation()">GPS: ON/OFF</button>
-            <button class="btn-side" onclick="toggleSidebar()">Tutup</button>
+            <button class="btn-side" style="margin-top:10px" onclick="toggleSidebar()">Tutup</button>
         </div>
     </div>
 
@@ -40,15 +41,23 @@
     <div class="app-container">
         <header>
             <h2>RCP<span>PRO</span></h2>
+            <p id="voiceStatus">🎙️ Perintah Suara: "Amos Foto"</p>
             <p id="time"></p>
         </header>
 
         <div class="camera-wrapper">
             <div class="camera-box" id="camBox">
                 <video id="video" autoplay playsinline></video>
-                <canvas id="canvas"></canvas>
+                <canvas id="canvas" style="display:none;"></canvas>
+                
+                <div id="gridOverlay" class="grid-layer">
+                    <div class="v-line" style="left: 33.33%;"></div>
+                    <div class="v-line" style="left: 66.66%;"></div>
+                    <div class="h-line" style="top: 33.33%;"></div>
+                    <div class="h-line" style="top: 66.66%;"></div>
+                </div>
+
                 <div class="shutter-flash"></div>
-                <div class="grid-overlay"></div>
             </div>
 
             <div class="info-overlay">
@@ -79,10 +88,5 @@
     <button id="openCam" onclick="startCamera()">📷 AKTIFKAN KAMERA</button>
 
     <script src="script.js"></script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("./sw.js");
-        }
-    </script>
 </body>
 </html>
