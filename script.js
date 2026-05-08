@@ -1,4 +1,4 @@
-const brandName = "AMOS RCP86 PRO";
+const brandName = "AMHOS CAM PRO";
 const brandLogo = new Image();
 brandLogo.src = "logo.png";
 
