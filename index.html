@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Camera RCP Pro - Ultimate Edition</title>
+    <title>Camera RCP Pro - Final Edition</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <link rel="stylesheet" href="style.css">
@@ -14,26 +14,26 @@
 <body>
 
     <div id="sidebar" class="sidebar">
-        <h3>⚙️ Pengaturan</h3>
+        <h3>⚙️ Pengaturan Pro</h3>
         <div class="menu">
-            <h4>Tampilan</h4>
+            <h4>Fitur Utama</h4>
+            <button class="btn-side" onclick="toggleGrid()">Grid Komposisi: ON/OFF</button>
+            <button class="btn-side" onclick="toggleLocation()">GPS Lokasi: ON/OFF</button>
+        </div>
+        <div class="menu">
+            <h4>Tampilan Watermark</h4>
             <select onchange="changeFont(this.value)">
-                <option value="Inter">Inter (Modern)</option>
-                <option value="monospace">Monospace</option>
-                <option value="cursive">Cursive</option>
+                <option value="Inter">Font: Modern Inter</option>
+                <option value="monospace">Font: Monospace</option>
+                <option value="cursive">Font: Cursive</option>
             </select>
-            <input type="range" min="12" max="30" oninput="changeFontSize(this.value)" value="18">
+            <input type="range" min="12" max="30" value="18" oninput="changeFontSize(this.value)">
         </div>
         <div class="menu">
-            <h4>Fitur Pro</h4>
-            <button class="btn-side" onclick="toggleGrid()">Grid: ON/OFF</button>
-            <button class="btn-side" onclick="toggleLocation()">GPS: ON/OFF</button>
-        </div>
-        <div class="menu">
-            <h4>Watermark</h4>
+            <h4>Teks Tambahan</h4>
             <input type="text" placeholder="Nama Kustom..." oninput="setWatermark(this.value)">
-            <button class="btn-side" style="margin-top:10px" onclick="toggleSidebar()">Tutup</button>
         </div>
+        <button class="btn-side" style="background:rgba(239, 68, 68, 0.2); margin-top:20px;" onclick="toggleSidebar()">TUTUP</button>
     </div>
 
     <button class="open-sidebar" onclick="toggleSidebar()">⚙️</button>
@@ -41,7 +41,7 @@
     <div class="app-container">
         <header>
             <h2>RCP<span>PRO</span></h2>
-            <p id="voiceStatus">🎙️ Perintah Suara: "Amos Foto"</p>
+            <p id="voiceStatus">🎙️ Perintah Suara Aktif: "Amos Foto"</p>
             <p id="time"></p>
         </header>
 
@@ -50,7 +50,7 @@
                 <video id="video" autoplay playsinline></video>
                 <canvas id="canvas" style="display:none;"></canvas>
                 
-                <div id="gridOverlay" class="grid-layer">
+                <div id="gridOverlay" class="grid-layer" style="display:none;">
                     <div class="v-line" style="left: 33.33%;"></div>
                     <div class="v-line" style="left: 66.66%;"></div>
                     <div class="h-line" style="top: 33.33%;"></div>
@@ -61,7 +61,7 @@
             </div>
 
             <div class="info-overlay">
-                <p id="address">Mendeteksi lokasi...</p>
+                <p id="address">Mendeteksi lokasi GPS...</p>
             </div>
         </div>
 
