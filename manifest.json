@@ -1,10 +1,10 @@
 {
-  "name": "Camera RCP Pro",
-  "short_name": "RCP Camera",
+  "name": "Amhos Cam Pro",
+  "short_name": "Amhos Cam",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#fdfaf5",
+  "theme_color": "#e67e22",
   "orientation": "portrait",
   "icons": [
     {
