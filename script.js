@@ -12,12 +12,13 @@ let facingMode = "environment";
 let stream = null;
 let currentFilter = "none";
 let nightMode = false;
+let map, marker;
 
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-// Sidebar & Settings
+// SIDEBAR & UI
 function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
 function changeFont(f) { customFont = f; }
 function changeFontSize(s) { customFontSize = parseInt(s); }
@@ -28,10 +29,10 @@ function toggleLocation() {
 }
 function toggleGrid() {
     const grid = document.getElementById("gridOverlay");
-    grid.style.display = grid.style.display === "none" ? "block" : "none";
+    grid.style.display = (grid.style.display === "none" || grid.style.display === "") ? "block" : "none";
 }
 
-// Camera Logic
+// CAMERA START
 async function startCamera() {
     if(stream) stream.getTracks().forEach(t => t.stop());
     try {
@@ -43,7 +44,7 @@ async function startCamera() {
         document.getElementById("openCam").style.display = "none";
         initVoiceControl();
     } catch (err) {
-        alert("Akses kamera ditolak.");
+        alert("Gagal mengakses kamera. Pastikan izin diberikan.");
     }
 }
 
@@ -52,12 +53,12 @@ function switchCamera() {
     startCamera();
 }
 
-// Filters
+// FILTER LOGIC
 function setFilter(type) {
     const filters = {
         normal: "none",
-        vintage: "sepia(0.6) contrast(1.1)",
-        cool: "saturate(1.4) hue-rotate(10deg)",
+        vintage: "sepia(0.5) contrast(1.1) brightness(0.9)",
+        cool: "saturate(1.5) hue-rotate(15deg) brightness(1.1)",
         bw: "grayscale(1) contrast(1.2)"
     };
     currentFilter = filters[type];
@@ -70,40 +71,47 @@ function toggleNight() {
 }
 
 function applyFilters() {
-    video.style.filter = `${currentFilter} ${nightMode ? 'brightness(0.6) contrast(1.5)' : ''}`;
+    video.style.filter = `${currentFilter} ${nightMode ? 'brightness(1.4) contrast(1.2)' : ''}`;
 }
 
-// Photo Action
+// PHOTO LOGIC
 function takePhoto() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+    
+    // Draw with current filters
     ctx.filter = video.style.filter;
     ctx.drawImage(video, 0, 0);
 
-    // Watermark
+    // Watermark Background
     ctx.filter = "none";
     ctx.fillStyle = "rgba(0,0,0,0.5)";
-    ctx.fillRect(0, canvas.height - 150, canvas.width, 150);
+    ctx.fillRect(0, canvas.height - 160, canvas.width, 160);
 
+    // Brand Name
     ctx.fillStyle = "#00ffd5";
-    ctx.font = `bold 24px ${customFont}`;
-    ctx.fillText(brandName + (customWatermark ? " | " + customWatermark : ""), 30, canvas.height - 100);
+    ctx.font = `bold 26px ${customFont}`;
+    ctx.fillText(brandName + (customWatermark ? " | " + customWatermark : ""), 30, canvas.height - 110);
 
+    // Info Details
     ctx.fillStyle = "white";
     ctx.font = `${customFontSize}px ${customFont}`;
     const timeStr = new Date().toLocaleString('id-ID');
-    if(locationOn) ctx.fillText(document.getElementById("address").innerText, 30, canvas.height - 65);
-    ctx.fillText(`${timeStr} | GPS: ${currentLat}, ${currentLng}`, 30, canvas.height - 35);
-    ctx.fillText(`ID: RCP-${photoCounter}`, 30, canvas.height - 10);
+    const addr = document.getElementById("address").innerText;
+    
+    if(locationOn) ctx.fillText(addr.length > 70 ? addr.substring(0, 70) + "..." : addr, 30, canvas.height - 75);
+    ctx.fillText(`${timeStr} | GPS: ${currentLat}, ${currentLng}`, 30, canvas.height - 45);
+    ctx.fillText(`ID: RCP-PHOTO-${photoCounter}`, 30, canvas.height - 15);
 
-    ctx.drawImage(brandLogo, canvas.width - 100, canvas.height - 100, 70, 70);
+    // Branding Logo
+    if(brandLogo.complete) ctx.drawImage(brandLogo, canvas.width - 110, canvas.height - 110, 80, 80);
 
-    // Flash
+    // Flash Effect
     const flash = document.querySelector(".shutter-flash");
     flash.classList.add("flash-active");
     setTimeout(() => flash.classList.remove("flash-active"), 200);
 
-    // Download
+    // Auto Save
     const link = document.createElement("a");
     link.download = `RCP_${Date.now()}.png`;
     link.href = canvas.toDataURL("image/png");
@@ -111,7 +119,7 @@ function takePhoto() {
     photoCounter++;
 }
 
-// Voice Command
+// VOICE CONTROL
 function initVoiceControl() {
     const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (Speech) {
@@ -120,22 +128,22 @@ function initVoiceControl() {
         recognition.continuous = true;
         recognition.onresult = (event) => {
             const msg = event.results[event.results.length - 1][0].transcript.toLowerCase();
-            if (msg.includes("amos foto") || msg.includes("capture")) takePhoto();
+            if (msg.includes("amos foto") || msg.includes("foto")) takePhoto();
         };
         recognition.start();
+        document.getElementById("voiceStatus").style.display = "block";
     }
 }
 
-// GPS
-let map, marker;
+// GPS & MAP
 navigator.geolocation.watchPosition(async pos => {
     currentLat = pos.coords.latitude.toFixed(6);
     currentLng = pos.coords.longitude.toFixed(6);
-    if(!map) {
+    if(!map && L) {
         map = L.map('map').setView([currentLat, currentLng], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         marker = L.marker([currentLat, currentLng]).addTo(map);
-    } else {
+    } else if(marker) {
         marker.setLatLng([currentLat, currentLng]);
         map.setView([currentLat, currentLng]);
     }
